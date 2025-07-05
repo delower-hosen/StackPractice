@@ -5,6 +5,7 @@
 bin/
 obj/
 out/
+.vs/
 TestResults/
 [Ll]og/
 *.log

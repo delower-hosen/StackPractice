@@ -16,7 +16,7 @@ namespace WebService.Controllers
         public async Task<IActionResult> Post([FromBody] CreateProductCommand command)
         {
             await _mediator.Send(command);
-            return Ok("Created product successfully!");
+            return Ok("Created product successfully!!");
         }
     }
 }
