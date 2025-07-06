@@ -30,7 +30,7 @@ jobs:
       run: dotnet build $PROJECT_PATH --no-restore
 
     - name: Run all tests (with report)
-      run: dotnet test ${{ env.PROJECT_PATH }} --no-build --configuration Release --logger "trx"
+      run: dotnet test EFCoreDemo/xUnitTests/xUnitTests.csproj --no-build --configuration Release --logger "trx"
 
     - name: Upload test results
       uses: actions/upload-artifact@v4
