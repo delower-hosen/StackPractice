@@ -13,7 +13,7 @@ jobs:
     - name: Load env variables from vars.env
       run: |
         set -a
-        source ../variables/vars.env
+        source ./.github/variables/vars.env
         set +a
       shell: bash
 
