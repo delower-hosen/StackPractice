@@ -3,8 +3,10 @@ name: Deploy to Render
 on:
   workflow_call:
     secrets:
-      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
-      RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+      DOCKERHUB_PASSWORD:
+        required: true
+      RENDER_API_KEY:
+        required: true
 
 jobs:
   deploy:
