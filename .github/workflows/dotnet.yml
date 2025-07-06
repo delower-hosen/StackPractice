@@ -35,3 +35,9 @@ jobs:
     - name: Run tests (with report)
       run: dotnet test $PROJECT_PATH --configuration Release --logger "trx"
 
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: '**/TestResults/*.trx'
+
