@@ -29,8 +29,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore $PROJECT_PATH
       
-    - name: Build
+    - name: Build solution
       run: dotnet build $PROJECT_PATH --no-restore
 
-    - name: Run all tests (with report)
-      run: dotnet test $PROJECT_PATH --no-build --configuration Release
+    - name: Run tests (with report)
+      run: dotnet test EFCoreDemo/xUnitTests/xUnitTests.csproj --configuration Release --logger "trx"
+
