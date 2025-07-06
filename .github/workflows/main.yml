@@ -1,0 +1,13 @@
+name: .NET CI
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build-job:
+    uses: ./.github/workflows/build.yml
+
+  test-job:
+    uses: ./.github/workflows/test.yml

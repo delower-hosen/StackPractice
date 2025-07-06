@@ -1,0 +1,28 @@
+name: Build .NET Solution
+on:
+  workflow_call:
+
+env:
+  PROJECT_PATH: EFCoreDemo/EFCoreDemo.sln
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Clean solution
+      run: dotnet clean $PROJECT_PATH
+
+    - name: Restore dependencies
+      run: dotnet restore $PROJECT_PATH
+
+    - name: Build solution
+      run: dotnet build $PROJECT_PATH --no-restore --configuration Release
