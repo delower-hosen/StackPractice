@@ -2,15 +2,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy csproj and restore as separate layer
-COPY EFCoreDemo/*.csproj ./EFCoreDemo/
-RUN dotnet restore EFCoreDemo/EFCoreDemo.csproj
+# Copy only the .csproj first and restore dependencies
+COPY EFCoreDemo/EFCoreDemo.csproj ./EFCoreDemo/
+RUN dotnet restore ./EFCoreDemo/EFCoreDemo.csproj
 
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish EFCoreDemo/EFCoreDemo.csproj -c Release -o out
+# Now copy the full source code
+COPY EFCoreDemo/ ./EFCoreDemo/
 
-# Stage 2: Runtime
+# Build the project
+RUN dotnet publish ./EFCoreDemo/EFCoreDemo.csproj -c Release -o out
+
+# Stage 2: Run
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
