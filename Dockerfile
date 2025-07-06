@@ -2,20 +2,19 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
 
-# Copy only the .csproj first and restore dependencies
-COPY EFCoreDemo/EFCoreDemo.csproj ./EFCoreDemo/
-RUN dotnet restore ./EFCoreDemo/EFCoreDemo.csproj
+# Copy only the .csproj file and restore dependencies
+COPY EFCoreDemo/WebService/WebService.csproj ./WebService/
+RUN dotnet restore ./WebService/WebService.csproj
 
-# Now copy the full source code
-COPY EFCoreDemo/ ./EFCoreDemo/
+# Copy the rest of the app
+COPY EFCoreDemo/WebService/ ./WebService/
 
-# Build the project
-RUN dotnet publish ./EFCoreDemo/EFCoreDemo.csproj -c Release -o out
+# Publish the app
+RUN dotnet publish ./WebService/WebService.csproj -c Release -o out
 
-# Stage 2: Run
+# Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
-
 EXPOSE 80
-ENTRYPOINT ["dotnet", "EFCoreDemo.dll"]
+ENTRYPOINT ["dotnet", "WebService.dll"]
