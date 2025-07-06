@@ -12,8 +12,16 @@ jobs:
   test-job:
     needs: build-job
     uses: ./.github/workflows/test.yml
+    
   sonar-job:
     needs: test-job
     uses: ./.github/workflows/sonar.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  deploy-job:
+    needs: [test-job, sonar-job]
+    uses: ./.github/workflows/deploy.yml
+    secrets:
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
