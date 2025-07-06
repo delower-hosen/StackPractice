@@ -22,9 +22,9 @@ jobs:
       run: dotnet restore $PROJECT_PATH
 
     - name: Run unit tests
-      run: dotnet test $PROJECT_PATH --no-build --configuration Release --verbosity normal
+      run: dotnet test $PROJECT_PATH --configuration Release --verbosity normal
 
-    - name: 📤 Upload test results
+    - name: Upload test results
       uses: actions/upload-artifact@v4
       with:
         name: test-results
