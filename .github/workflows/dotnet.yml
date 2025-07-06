@@ -23,6 +23,9 @@ jobs:
       with:
         dotnet-version: 8.0.x
         
+    - name: Clean solution
+      run: dotnet clean $PROJECT_PATH
+  
     - name: Restore dependencies
       run: dotnet restore $PROJECT_PATH
       
@@ -30,10 +33,4 @@ jobs:
       run: dotnet build $PROJECT_PATH --no-restore
 
     - name: Run all tests (with report)
-      run: dotnet test EFCoreDemo/xUnitTests/xUnitTests.csproj --no-build --configuration Release --logger "trx"
-
-    - name: Upload test results
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results
-        path: '**/TestResults/*.trx'
+      run: dotnet test $PROJECT_PATH --no-build --configuration Release --logger "trx"
