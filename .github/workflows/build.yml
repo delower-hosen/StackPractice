@@ -2,9 +2,6 @@ name: Build .NET Solution
 on:
   workflow_call:
 
-env:
-  PROJECT_PATH: EFCoreDemo/EFCoreDemo.sln
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,16 +10,23 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Load env variables from vars.env
+      run: |
+        set -a
+        source variables/vars.env
+        set +a
+      shell: bash
+
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ env.DOTNET_VERSION }}
 
     - name: Clean solution
-      run: dotnet clean $PROJECT_PATH
+      run: dotnet clean ${{ env.PROJECT_PATH }}
 
     - name: Restore dependencies
-      run: dotnet restore $PROJECT_PATH
+      run: dotnet restore ${{ env.PROJECT_PATH }}
 
     - name: Build solution
-      run: dotnet build $PROJECT_PATH --no-restore --configuration Release
+      run: dotnet build ${{ env.PROJECT_PATH }} --no-restore --configuration Release
