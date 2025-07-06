@@ -10,12 +10,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Load env variables from vars.env
-      run: |
-        set -a
-        source ./.github/variables/vars.env
-        set +a
-      shell: bash
+    - name: Load environment variables
+      uses: ./.github/actions/load-env
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4

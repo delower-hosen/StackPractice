@@ -1,0 +1,19 @@
+name: 'Set environment variables'
+description: 'Loads env variables from a .env file and makes them available to other steps'
+inputs:
+  varFilePath:
+    description: 'Path to the .env file'
+    required: false
+    default: .github/variables/vars.env
+
+runs:
+  using: "composite"
+  steps:
+    - name: Load environment variables
+      shell: bash
+      run: |
+        echo "Loading from ${{ inputs.varFilePath }}"
+        while IFS='=' read -r key value || [[ -n "$key" ]]; do
+          if [[ "$key" =~ ^#.* ]] || [[ -z "$key" ]]; then continue; fi
+          echo "$key=$value" >> $GITHUB_ENV
+        done < "${{ inputs.varFilePath }}"
