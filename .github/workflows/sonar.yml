@@ -57,7 +57,7 @@ jobs:
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Build solution
-        run: dotnet build EFCoreDemo/EFCoreDemo.sln --configuration Release
+        run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release
 
       - name: End Sonar analysis
         shell: powershell
