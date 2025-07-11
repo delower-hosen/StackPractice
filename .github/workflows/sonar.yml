@@ -54,7 +54,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin `
-            /k:"delower-hosen_EFCoreDemo" `
+            /k:"delower-hosen_StackPractice" `
             /o:"delower-hosen" `
             /d:sonar.host.url="https://sonarcloud.io" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
