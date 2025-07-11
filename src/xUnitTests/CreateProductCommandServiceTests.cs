@@ -1,6 +1,6 @@
 ﻿using Domain.Commands;
-using EfCore.PostgreSql.DomainModels.Entities;
-using EfCore.PostgreSql.Repositories;
+using Infrastructure.Entities;
+using Infrastructure.Repositories;
 using Moq;
 using Services.CommandServices;
 

@@ -1,6 +1,6 @@
 using Domain.CommandHandlers;
-using EfCore.PostgreSql;
-using EfCore.PostgreSql.Repositories;
+using Infrastructure;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using ServiceCollector;
 

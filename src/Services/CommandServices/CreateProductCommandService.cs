@@ -1,7 +1,7 @@
 ﻿using Domain.Commands;
 using Domain.Contracts;
-using EfCore.PostgreSql.DomainModels.Entities;
-using EfCore.PostgreSql.Repositories;
+using Infrastructure.Entities;
+using Infrastructure.Repositories;
 
 namespace Services.CommandServices
 {
