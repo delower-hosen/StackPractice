@@ -57,7 +57,8 @@ jobs:
             /k:"delower-hosen_StackPractice" `
             /o:"delower-hosen" `
             /d:sonar.host.url="https://sonarcloud.io" `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.newCode.referenceBranch="master"
 
       - name: Build solution
         run: dotnet build ${{ env.PROJECT_PATH }} --configuration Release
