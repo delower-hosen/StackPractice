@@ -28,10 +28,8 @@ jobs:
       - name: Push Docker image to Docker Hub
         run: docker push delower/stack-practice:latest
 
-      - name: Deploy to Render
+      - name: Trigger Render Deploy via Deploy Hook
         env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-          RENDER_SERVICE_ID: ${{ secrets.RENDER_SERVICE_ID }}
-        run: |
-          curl -X POST https://api.render.com/deploy/${RENDER_SERVICE_ID} \
-          -H "Authorization: Bearer $RENDER_API_KEY"
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: curl -X GET "$RENDER_DEPLOY_HOOK_URL"
+
