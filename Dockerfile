@@ -1,20 +1,19 @@
 # Stage 1: Build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
+WORKDIR /src
 
-# Copy everything needed for restore/build
-COPY src/WebService/ ./WebService/
-COPY src/Domain/ ./Domain/
-COPY src/ServiceCollector/ ./ServiceCollector/
-COPY src/Services/ ./Services/
-COPY src/StackPractice.sln ./
+# Copy entire source folder with solution and projects
+COPY src/ ./
 
-# Restore and publish
-RUN dotnet restore WebService/WebService.csproj
-RUN dotnet publish WebService/WebService.csproj -c Release -o out
+# Restore all projects via the solution file
+RUN dotnet restore StackPractice.sln
+
+# Publish only the WebService project
+RUN dotnet publish WebService/WebService.csproj -c Release -o /app/out
 
 # Stage 2: Runtime
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/out .
+
 ENTRYPOINT ["dotnet", "WebService.dll"]
