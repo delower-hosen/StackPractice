@@ -5,7 +5,7 @@ on:
     secrets:
       DOCKERHUB_PASSWORD:
         required: true
-      RENDER_API_KEY:
+      RENDER_DEPLOY_HOOK_URL:
         required: true
 
 jobs:
