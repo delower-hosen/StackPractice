@@ -23,10 +23,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Build Docker image
-        run: docker build -t delower/efcoredemo:latest .
+        run: docker build -t delower/stack-practice:latest .
 
       - name: Push Docker image to Docker Hub
-        run: docker push delower/efcoredemo:latest
+        run: docker push delower/stack-practice:latest
 
       - name: Deploy to Render
         env:
