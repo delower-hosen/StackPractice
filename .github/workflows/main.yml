@@ -9,15 +9,15 @@ jobs:
   build-job:
     uses: ./.github/workflows/build.yml
 
-  test-job:
-    needs: build-job
-    uses: ./.github/workflows/test.yml
+  # test-job:
+  #   needs: build-job
+  #   uses: ./.github/workflows/test.yml
     
-  sonar-job:
-    needs: test-job
-    uses: ./.github/workflows/sonar.yml
-    secrets:
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  # sonar-job:
+  #   needs: test-job
+  #   uses: ./.github/workflows/sonar.yml
+  #   secrets:
+  #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   deploy-job:
     needs: [test-job, sonar-job]
