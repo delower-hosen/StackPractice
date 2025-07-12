@@ -65,9 +65,9 @@ if (app.Environment.IsDevelopment() || enableSwagger)
 
 }
 
-app.UseRateLimiter();
-
 app.UseForwardedHeaders();
+
+app.UseRateLimiter();
 
 app.UseHttpsRedirection();
 
