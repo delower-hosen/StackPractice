@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebService.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class ProductCommandController(ILogger<ProductCommandController> logger,
         IMediator mediator) : ApiControllerBase
     {

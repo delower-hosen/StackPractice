@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebService.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class ProductQueryController(ILogger<ProductQueryController> logger, IMediator mediator) : ApiControllerBase
     {
         private readonly ILogger<ProductQueryController> _logger = logger;
