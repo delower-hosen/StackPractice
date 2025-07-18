@@ -44,8 +44,6 @@ if (app.Environment.IsDevelopment() || enableSwagger)
 
 }
 
-app.UseForwardedHeaders();
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
