@@ -4,6 +4,7 @@ using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using ServiceCollector;
 using System.Threading.RateLimiting;
+using WebService.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,31 +27,9 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 builder.Services.AddProductCommandServices();
 
-builder.Services.AddRateLimiter(options =>
-{
-    options.OnRejected = async (context, cancellationToken) =>
-    {
-        context.HttpContext.Response.StatusCode = 429;
-        context.HttpContext.Response.ContentType = "application/json";
-        await context.HttpContext.Response.WriteAsync(
-            "{\"error\": \"Rate limit exceeded. Try again later.\"}", cancellationToken);
-    };
-
-    options.AddPolicy("per-ip", httpContext =>
-    {
-        var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-        return RateLimitPartition.GetFixedWindowLimiter(ipAddress, key => new FixedWindowRateLimiterOptions
-        {
-            PermitLimit = 3,
-            Window = TimeSpan.FromMinutes(1),
-            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
-            QueueLimit = 0
-        });
-    });
-
-});
-
 var app = builder.Build();
+
+app.UseMiddleware<DynamicRateLimitMiddleware>();
 
 // Configure the HTTP request pipeline.
 var enableSwagger = builder.Configuration.GetValue<bool>("EnableSwaggerInProd");
@@ -73,7 +52,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapControllers()
-    .RequireRateLimiting("per-ip");
+app.MapControllers();
 
 app.Run();
