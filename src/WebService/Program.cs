@@ -30,6 +30,21 @@ builder.Services.AddProductCommandServices();
 
 var app = builder.Build();
 
+app.Use(async (context, next) =>
+{
+    var remoteIp = context.Connection.RemoteIpAddress?.ToString();
+    var forwardedFor = context.Request.Headers["X-Forwarded-For"].ToString();
+    var forwardedProto = context.Request.Headers["X-Forwarded-Proto"].ToString();
+
+    Console.WriteLine("========== Incoming Request ==========");
+    Console.WriteLine($"RemoteIpAddress  : {remoteIp}");
+    Console.WriteLine($"X-Forwarded-For  : {forwardedFor}");
+    Console.WriteLine($"X-Forwarded-Proto: {forwardedProto}");
+    Console.WriteLine("======================================");
+
+    await next();
+});
+
 var forwardOptions = new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
