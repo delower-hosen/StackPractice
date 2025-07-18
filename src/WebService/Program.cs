@@ -1,6 +1,7 @@
 using Domain.CommandHandlers;
 using Infrastructure;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using ServiceCollector;
 using System.Threading.RateLimiting;
@@ -28,6 +29,14 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddProductCommandServices();
 
 var app = builder.Build();
+
+var forwardOptions = new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+};
+forwardOptions.KnownNetworks.Clear();
+forwardOptions.KnownProxies.Clear();
+app.UseForwardedHeaders(forwardOptions);
 
 app.UseMiddleware<DynamicRateLimitMiddleware>();
 
