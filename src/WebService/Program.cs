@@ -1,61 +1,41 @@
-using Domain.CommandHandlers;
 using Infrastructure;
+using Infrastructure.Hosting;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using ServiceCollector;
 using WebService.Middlewares;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddMediatR(cfg =>
+var options = new MyWebApiPipelineBuilderOptions
 {
-    cfg.RegisterServicesFromAssembly(typeof(CreateProductCommandHandler).Assembly);
-});
+    Args = args,
 
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
-builder.Services.AddProductCommandServices();
-
-var app = builder.Build();
-
-var forwardOptions = new ForwardedHeadersOptions
-{
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-};
-forwardOptions.KnownNetworks.Clear();
-forwardOptions.KnownProxies.Clear();
-app.UseForwardedHeaders(forwardOptions);
-
-app.UseMiddleware<DynamicRateLimitMiddleware>();
-
-// Configure the HTTP request pipeline.
-var enableSwagger = builder.Configuration.GetValue<bool>("EnableSwaggerInProd");
-
-if (app.Environment.IsDevelopment() || enableSwagger)
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    // Service-specific DI
+    ConfigureServices = (services, config) =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-    });
+        services.AddDbContext<AppDbContext>(o =>
+            o.UseNpgsql(config.GetConnectionString("DefaultConnection")));
 
-}
+        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-app.UseHttpsRedirection();
+        services.AddProductCommandServices(); // custom DI
+    },
 
-app.UseAuthorization();
+    // Service-specific middleware
+    ConfigureMiddlewares = (app, config) =>
+    {
+        var forwardOptions = new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+        };
+        forwardOptions.KnownNetworks.Clear();
+        forwardOptions.KnownProxies.Clear();
+        app.UseForwardedHeaders(forwardOptions);
 
-app.MapControllers();
+        app.UseMiddleware<DynamicRateLimitMiddleware>();
+    }
+};
 
+// Build & run using centralized hosting
+var app = MyWebApiPipelineBuilder.Build(options);
 app.Run();
