@@ -4,7 +4,6 @@ using Infrastructure.Repositories;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using ServiceCollector;
-using System.Threading.RateLimiting;
 using WebService.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,21 +28,6 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddProductCommandServices();
 
 var app = builder.Build();
-
-app.Use(async (context, next) =>
-{
-    var remoteIp = context.Connection.RemoteIpAddress?.ToString();
-    var forwardedFor = context.Request.Headers["X-Forwarded-For"].ToString();
-    var forwardedProto = context.Request.Headers["X-Forwarded-Proto"].ToString();
-
-    Console.WriteLine("========== Incoming Request ==========");
-    Console.WriteLine($"RemoteIpAddress  : {remoteIp}");
-    Console.WriteLine($"X-Forwarded-For  : {forwardedFor}");
-    Console.WriteLine($"X-Forwarded-Proto: {forwardedProto}");
-    Console.WriteLine("======================================");
-
-    await next();
-});
 
 var forwardOptions = new ForwardedHeadersOptions
 {
